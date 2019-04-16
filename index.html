@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>流水账</title>
+		<link href="./css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="./css/animate.min.css">
+		<link rel="stylesheet" href="./dist/rmodal-no-bootstrap.css" type="text/css" />
+		<link rel="stylesheet" href="./css/style.css">
+	</head>
+	<body>
+		<div>
+	    	<div class="digital">
+    			<!-- 中间表格部分  S-->
+				<table width="100%" id="userImportTable" border="0" cellpadding="0" cellspacing="0">
+	                <thead>
+	                    <tr>
+	                    	<th>厂家</th>
+	                        <th>型号</th>
+	                        <th>名称</th>
+	                        <th>期初</th>
+	                        <th>现存</th>
+	                        <th>入库合计</th>
+	                        <th>领料合计</th>
+							<th>操作</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+			           <div class="reminder"><p>没有检索到数据</p></div>
+	                </tbody>
+					<tfoot>
+						<tr>
+	                    	<th colspan="8" height="30">
+								<div class="userImportTableBottom">
+									<div class="dataTablesInfo"  role="status" aria-live="polite">
+										<button class="showDatasBtn" onclick="addDatas()">添加数据</button>
+									</div>
+									<!--显示页码数，前翻页，后翻页，当前页码-->
+									<div class=" tablePageinate">
+									</div>
+									<!--可选择每页暂时数据条数-->
+									<div class="digitalLength" >
+										<label>每页显示
+											<select name="tablesLength" class="tablesLength" onchange="changePages(this.value)"></select>
+										</label>
+									</div>
+									<!--消除浮动效果，防止影响后面的布局-->
+									<div class="clearBoth"></div>
+								</div>
+							</th>
+	                    </tr>
+					</tfoot>
+	            </table>
+				<!-- 中间表格部分  E-->
+	    	</div>
+	    	
+	    </div>
+
+        <!--模态窗口-->
+        <div id="modal" class="modal">
+            <div class="modal-dialog animated">
+                <div class="modal-content">
+                    <form class="form-horizontal" method="get">
+                        <div class="modal-header">
+                            <strong></strong>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <div class="input-group col-xs-7 mb">
+                                    <input placeholder="批次号..." type="text" name="keys" class="form-control" />
+                                </div>
+                                <div class="input-group col-xs-7">
+                                    <input placeholder="数量..." type="text" name="amounts" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn btn-default" type="button" onclick="modal.close(0);">取消</button>
+                            <button class="btn btn-primary" type="button" onclick="modal.close(1);">确认</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+	</body>
+	<script src="./js/jquery-1.12.3.js"></script>
+    <script src="./js/config.js"></script>
+    <script src="./js/link.js"></script>
+    <script src="./js/jsoner.js"></script>
+    <script src="./dist/rmodal.js"></script>
+	<script src="./js/data.js"></script>
+	<script src="./js/table.js"></script>
+    <script src="./js/init.js"></script>
+</html>
