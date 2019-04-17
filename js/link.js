@@ -1,7 +1,6 @@
 /*
 处理链接问题
  */
-
 function splitUrl() {
     let parameters = location.search.toString().substring(1);
     let results = {};
