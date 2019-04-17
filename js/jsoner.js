@@ -2,6 +2,25 @@
 json数据的操作方法
  */
 
+//获取数据
+function getDatas(urls){
+    let results;
+    $.ajax({
+        url : "http://localhost:8080/" + urls,
+        type : "post",
+        async : false,
+        success : function (data) {
+             results = data;
+        },
+        error : function (err) {
+            console.log(err)
+            alert("数据获取失败!");
+            return null;
+        }
+    });
+    return results;
+}
+
 //搜索json数据并返回结果
 function jsonSearch(args, sob = useData){
     let results = {"data": []};
@@ -38,8 +57,6 @@ function jsonSearchKey(key, args, sob = useData){
 }
 
 //末尾追加值,添加成功则返回１
-function jsonPush(vals, sob = useData) {
-    sob.data.push(vals);
-
-    return 1;
+function jsonPush(vals) {
+    return getDatas("/changeJsonData?cur=" + dataName + "&datas=" + vals);
 }
