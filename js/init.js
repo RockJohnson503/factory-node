@@ -8,7 +8,8 @@ let parameters = splitUrl();
 let results = parameters ? jsonSearch(parameters) : useData;
 
 //初始化表格的函数
-tableInit(results,true,true,true);
+let tableNum = getDatas("getTableNum");//获取当前表的展示数量
+tableInit(results, Number(tableNum), true, true);
 
 //初始化样式
 if(!flag){
