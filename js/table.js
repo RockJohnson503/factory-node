@@ -12,8 +12,6 @@ function tableInit(result,dataNum,pages,setOpen){
     }else{
         if(typeof dataNum === "number"){
             tableNum=dataNum;
-        }else{
-            tableNum=5;
         }
     }
     if(result.status){
@@ -35,13 +33,13 @@ function tableInit(result,dataNum,pages,setOpen){
     if(pages){
         if(pages.length>0){
             for(let i in pages){
-                let optionPage=$('<option value="'+pages[i]+'">'+pages[i]+'</option>');
+                let optionPage=$('<option ' + (pages[i] === tableNum ? 'selected=“selected"' : '') + ' value="'+pages[i]+'">'+pages[i]+'</option>');
                 $(".tablesLength").append(optionPage);
             }
         }else{
             let pages=pagesChoose;
             for(let i in pages){
-                let optionPage=$('<option value="'+pages[i]+'">'+pages[i]+'</option>');
+                let optionPage=$('<option ' + (pages[i] === tableNum ? 'selected=“selected"' : '') + ' value="'+pages[i]+'">'+pages[i]+'</option>');
                 $(".tablesLength").append(optionPage);
             }
         }
@@ -55,14 +53,14 @@ function tableInit(result,dataNum,pages,setOpen){
 
 
 /*创建table数据*/
-function tableCreate(trHtmls = ""){
+function tableCreate(){
     let flag = path.indexOf("keys") !== -1;
     $("#userImportTable>tbody").html("");
     $("#userImportAllTd>input").prop("checked", false);
 
     /*创建table里面的数据结构 td的各项值 S*/
     for(let i in filtrateTable){
-        let trHtml=trHtmls || $("<tr>"+
+        let trHtml=$("<tr>"+
             "<td>"+(filtrateTable[i].factory || '空')+"</td>"+
             "<td><span>"+filtrateTable[i].id+"</span></td>"+
             "<td>"+filtrateTable[i].name+"</td>"+
@@ -400,6 +398,7 @@ function changePages(pageNum){
     }else{
         filtrateTable=backupAataArray.slice(0);
     }
+    getDatas("/changeTableNum?tableNum=" + tableNum);
     tableCreate();
     createPages();
 }
