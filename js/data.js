@@ -71,6 +71,7 @@ function checkAddDatas(node) {
     }
 
     //验证完毕
+    results.now = results.first + results.in - results.out;
     let txt = "厂家: " + results.factory + ",  型号: " + results.id +
         ",  名称: " + results.name + ",  期初: " + results.first +
         ",  现存: " + results.now + ",  入库合计: " + results.in +
@@ -79,9 +80,12 @@ function checkAddDatas(node) {
     if(!check){
         return ;
     }
-
-    if(jsonPush(results) === 1){
-        tableCreate(); //后面替换成刷新页面;
+    
+    let q = jsonPush(JSON.stringify(results));
+    if(q !== null){
         alert("添加数据成功!");
+        location.reload();
+    }else{
+        alert("添加数据失败!");
     }
 }
