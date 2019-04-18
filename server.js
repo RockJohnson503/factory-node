@@ -1,18 +1,18 @@
 /*
 服务器端
  */
-let http = require('http');
-let fs = require('fs');
-let url = require('url');
-let func = require("./js/serverFunc");
+var http = require('http');
+var fs = require('fs');
+var url = require('url');
+var func = require("./js/serverFunc");
  
 // 创建服务器
 http.createServer( function (request, response) {  
     // 解析请求，包括文件名
-    let pathname = url.parse(request.url).pathname;
-    let urls = ["/getTableNum", "/getJsonData", "/changeTableNum", "/changeJsonData"];
-    let fileUrls = ["./data/tableNum.txt","./data/?.json", "./data/tableNum.txt", "./data/?.json"];
-    let funcs = [func.getFiler, func.getFiler, func.writeFiler, func.writeFiler];
+    var pathname = url.parse(request.url).pathname;
+    var urls = ["/getTableNum", "/getJsonData", "/changeTableNum", "/changeJsonData"];
+    var fileUrls = ["./data/tableNum.txt","./data/?.json", "./data/tableNum.txt", "./data/?.json"];
+    var funcs = [func.getFiler, func.getFiler, func.writeFiler, func.writeFiler];
     func.status = 0;
 
     //路由
