@@ -1,6 +1,7 @@
 //型号的操作
-function idOperat(id, operat){
+function idOperat(factory, id, name, operat){
     let modalHeader = document.getElementsByClassName("modal-header")[0].getElementsByTagName("strong")[0];
+
     if(modalHeader.innerText !== ""){
         $(".modal-body .input-group").eq(0).css("display", "");
         modalHeader.childNodes[0].remove();
@@ -8,12 +9,47 @@ function idOperat(id, operat){
     if(operat === "领料"){
         $(".modal-body .input-group").eq(0).css("display", "none");
     }
+    modalHeader.setAttribute("_factory", factory);
+    modalHeader.setAttribute("_id", id);
+    modalHeader.setAttribute("_name", name);
     modalHeader.append(operat + "型号: " + id);
 }
 
 //检查批次号输入的数据
-function checkOpDatas() {
-    return false;
+function checkOpDatas(node) {
+    let modalHeader = node.parentNode.parentNode.childNodes[1].childNodes[1];
+    let thisFactory = modalHeader.getAttribute("_factory");
+    let thisId = modalHeader.getAttribute("_id");
+    let thisName = modalHeader.getAttribute("_name");
+    let keys = $("input[name = 'keys']").val();
+    let amounts = Number($("input[name = 'amounts']").val());
+    let date = new Date();
+    let results;
+
+    if(modalHeader.innerText.indexOf("入库") !== -1){
+        if(!keys || !amounts || !amounts){
+            alert("请输入批次号和数量!");
+            return ;
+        }
+
+        results = {
+            "factory": thisFactory,
+            "id": thisId,
+            "name": thisName,
+            "key": keys,
+            "operat": "入库",
+            "num": amounts,
+            "date": date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()
+        }
+    }
+
+    let q= jsonPush(JSON.stringify(results), "detailData");
+    if(q !== null){
+        alert("添加数据成功!");
+        location.reload();
+    }else{
+        alert("添加数据失败!");
+    }
 }
 
 //检查添加输入的数据
