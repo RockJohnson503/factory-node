@@ -54,6 +54,7 @@ exports.writeFiler = function (request, response, url, fileUrl) {
     //获取参数
     let args;
     let datas;
+    let exist;
     if(request.url.indexOf("&") === -1){
         args = decodeURIComponent(request.url.split("?")[1].split("=")[1]);
     }else{
@@ -70,7 +71,20 @@ exports.writeFiler = function (request, response, url, fileUrl) {
         }else{
             if(datas){
                 data = JSON.parse(data);
-                data.data.push(datas);
+
+                //判断这条数据是否存在
+                for(let i in data.data){
+                    if(datas.id === data.data[i].id &&
+                        datas.factory === data.data[i].factory &&
+                        datas.name === data.data[i].name && fileUrl.indexOf("turnoverData") !== -1){
+                        exist = 1;
+                        for(let q in data.data[i]){
+                            data.data[i][q] = datas[q];
+                        }
+                    }
+                }
+
+                if(!exist){data.data.push(datas);}
                 args = JSON.stringify(data);
             }
 
