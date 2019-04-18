@@ -24,15 +24,19 @@ function checkOpDatas(node) {
     let keys = $("input[name = 'keys']").val();
     let amounts = Number($("input[name = 'amounts']").val());
     let date = new Date();
-    let results;
+    let results = [];
+    let product = jsonSearch({"factory": thisFactory, "id": thisId, "name": thisName}).data[0];
 
     if(modalHeader.innerText.indexOf("入库") !== -1){
-        if(!keys || !amounts || !amounts){
+        if(!keys || !amounts){
             alert("请输入批次号和数量!");
             return ;
         }
 
-        results = {
+        product.in += amounts;
+        product.now = product.first + product.in - product.out;
+        results.push(product);
+        results.push({
             "factory": thisFactory,
             "id": thisId,
             "name": thisName,
@@ -40,11 +44,17 @@ function checkOpDatas(node) {
             "operat": "入库",
             "num": amounts,
             "date": date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()
+        });
+    }else{
+        if(!keys || !amounts || !amounts){
+            alert("请输入批次号和数量!");
+            return ;
         }
     }
 
-    let q= jsonPush(JSON.stringify(results), "detailData");
-    if(q !== null){
+    let k = jsonPush(JSON.stringify(results[0]), "turnoverData");
+    let q = jsonPush(JSON.stringify(results[1]), "detailData");
+    if(q !== null && k !== null){
         alert("添加数据成功!");
         location.reload();
     }else{
@@ -100,8 +110,10 @@ function checkAddDatas(node) {
 
     //验证型号是否重复
     for(let k in useData.data){
-        if(results.id === useData.data[k].id){
-            alert("您输入了重复的型号!");
+        if(results.id === useData.data[k].id &&
+            results.factory === useData.data[k].factory &&
+            results.name === useData.data[k].name){
+            alert("您输入了重复的产品!");
             return ;
         }
     }
