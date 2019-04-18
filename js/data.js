@@ -16,21 +16,28 @@ function idOperat(factory, id, name, operat){
 }
 
 //检查批次号输入的数据
-function checkOpDatas(node) {
-    let modalHeader = node.parentNode.parentNode.childNodes[1].childNodes[1];
+function checkOpDatas() {
+    let modalHeader = $(".modal-header strong")[0];
     let thisFactory = modalHeader.getAttribute("_factory");
     let thisId = modalHeader.getAttribute("_id");
     let thisName = modalHeader.getAttribute("_name");
-    let keys = $("input[name = 'keys']").val();
+    let key = $("input[name = 'keys']").val();
     let amounts = Number($("input[name = 'amounts']").val());
     let date = new Date();
     let results = [];
     let product = jsonSearch({"factory": thisFactory, "id": thisId, "name": thisName}).data[0];
+    let keys = getDatas("getJsonData?cur=keyNum");
 
     if(modalHeader.innerText.indexOf("入库") !== -1){
-        if(!keys || !amounts){
+        if(!key || !amounts){
             alert("请输入批次号和数量!");
             return ;
+        }
+        for(let i in keys.data){
+            if(keys.data[i].key === key){
+                alert("您输入了重复的批次号!");
+                return ;
+            }
         }
 
         product.in += amounts;
@@ -40,26 +47,84 @@ function checkOpDatas(node) {
             "factory": thisFactory,
             "id": thisId,
             "name": thisName,
-            "key": keys,
+            "key": key,
             "operat": "入库",
             "num": amounts,
             "date": date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()
         });
-    }else{
-        if(!keys || !amounts || !amounts){
-            alert("请输入批次号和数量!");
+        results.push({"key": key, "num": amounts});
+
+        if(jsonPush(JSON.stringify(results[0]), "turnoverData") !== null &&
+            jsonPush(JSON.stringify(results[1]), "detailData") !== null &&
+            jsonPush(JSON.stringify(results[2]), "keyNum") !== null){
+            alert("入库成功!");
+        }else{
+            alert("入库失败!code(3)");
             return ;
         }
-    }
-
-    let k = jsonPush(JSON.stringify(results[0]), "turnoverData");
-    let q = jsonPush(JSON.stringify(results[1]), "detailData");
-    if(q !== null && k !== null){
-        alert("添加数据成功!");
-        location.reload();
     }else{
-        alert("添加数据失败!");
+        if(!amounts){
+            alert("请输入数量!");
+            return ;
+        }
+
+        let detailData = getDatas("getJsonData?cur=detailData");
+        let allIn = jsonSearch({"factory": thisFactory, "id": thisId, "name": thisName, "operat": "入库"}, detailData).data;
+        let result= {
+                    "factory": thisFactory,
+                    "id": thisId,
+                    "name": thisName,
+                    "key": "",
+                    "operat": "领料",
+                    "num": amounts,
+                    "date": date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()
+                };
+
+        //判断领料量是否超出库存
+        if(amounts > product.now){
+            alert("领料量以及超出库存!");
+            return ;
+        }
+
+        //修改产品的数量
+        product.out += amounts;
+        product.now = product.first + product.in - product.out;
+
+        for(let i = allIn.length - 1; i >= 0; i--){
+            curKey = allIn[i].key;//当前的批次号
+            curKeys = jsonSearch({"key": curKey}, keys).data[0];
+
+            //检查该批次号是否有库存
+            if(curKeys.num === 0){
+                continue;
+            }
+
+            //检查该次批次号库存是否足够
+            if(curKeys.num < amounts){
+                result.num = curKeys.num;
+                result.key = curKey;
+                amounts -= curKeys.num;
+                curKeys.num = 0;
+
+                if(jsonPush(JSON.stringify(result), "detailData") === null){alert("领料失败!code(4)");return;}
+                if(jsonPush(JSON.stringify(curKeys), "keyNum") === null){alert("领料失败!code(5)");return;}
+                continue;
+            }
+
+            //最后一次加入
+            result.num = amounts;
+            result.key = curKey;
+            curKeys.num -= amounts;
+
+            if(jsonPush(JSON.stringify(result), "detailData") === null){alert("领料失败!code(6)");return;}
+            if(jsonPush(JSON.stringify(curKeys), "keyNum") === null){alert("领料失败!code(7)");return;}
+            break;
+        }
+
+        if(jsonPush(JSON.stringify(product), "turnoverData") === null){alert("领料失败!code(8)");return;}
+        alert("领料成功!");
     }
+    location.reload();
 }
 
 //检查添加输入的数据
@@ -134,6 +199,6 @@ function checkAddDatas(node) {
         alert("添加数据成功!");
         location.reload();
     }else{
-        alert("添加数据失败!");
+        alert("添加数据失败!code(2)");
     }
 }
