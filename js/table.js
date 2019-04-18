@@ -8,7 +8,7 @@
 function tableInit(result,dataNum,pages,setOpen){
     setOn=setOpen;
     if(!dataNum){
-        alert("请填写正确的每页展示数据格式！")
+        alert("请填写正确的每页展示数据格式！code(1)")
     }else{
         if(typeof dataNum === "number"){
             tableNum=dataNum;
@@ -28,7 +28,6 @@ function tableInit(result,dataNum,pages,setOpen){
                 filtrateTable=backupAataArray.slice(0);
             }
         }
-        roleSelect=result.role;
     }
     if(pages){
         if(pages.length>0){
