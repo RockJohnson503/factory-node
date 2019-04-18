@@ -57,6 +57,6 @@ function jsonSearchKey(key, args, sob = useData){
 }
 
 //末尾追加值,添加成功则返回１
-function jsonPush(vals) {
-    return getDatas("/changeJsonData?cur=" + dataName + "&datas=" + vals);
+function jsonPush(vals, cdataName = dataName) {
+    return getDatas("changeJsonData?cur=" + cdataName + "&datas=" + vals);
 }
