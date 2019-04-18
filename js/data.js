@@ -69,7 +69,7 @@ function checkOpDatas() {
         }
 
         let detailData = getDatas("getJsonData?cur=detailData");
-        let allIn = jsonSearch({"factory": thisFactory, "id": thisId, "name": thisName, "operat": "入库"}, detailData).data;
+        let allIn = jsonSearch({"factory": thisFactory, "id": thisId, "name": thisName, "operat": "入库"}, false, detailData).data;
         let result= {
                     "factory": thisFactory,
                     "id": thisId,
@@ -92,7 +92,7 @@ function checkOpDatas() {
 
         for(let i = allIn.length - 1; i >= 0; i--){
             curKey = allIn[i].key;//当前的批次号
-            curKeys = jsonSearch({"key": curKey}, keys).data[0];
+            curKeys = jsonSearch({"key": curKey}, false, keys).data[0];
 
             //检查该批次号是否有库存
             if(curKeys.num === 0){

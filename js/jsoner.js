@@ -22,16 +22,24 @@ function getDatas(urls){
 }
 
 //搜索json数据并返回结果
-function jsonSearch(args, sob = useData){
+function jsonSearch(args, match=false, sob = useData){
     let results = {"data": []};
 
-    for(i in sob.data){
-        if(sob.data[i].factory === args.factory || !args.factory) {
-            if(sob.data[i].id === args.id || !args.id){
-                if(sob.data[i].name === args.name || !args.name){
-                    if(sob.data[i].operat === args.operat || !args.operat){
-                        if(sob.data[i].key === args.key || !args.key){
-                            results.data.push(sob.data[i]);
+    if(match){
+        for(let i in sob.data){
+            if(sob.data[i].factory === args.sear || sob.data[i].id === args.sear || sob.data[i].name === args.sear){
+                results.data.push(sob.data[i]);
+            }
+        }
+    }else{
+        for(let i in sob.data){
+            if(sob.data[i].factory === args.factory || !args.factory) {
+                if(sob.data[i].id === args.id || !args.id){
+                    if(sob.data[i].name === args.name || !args.name){
+                        if(sob.data[i].operat === args.operat || !args.operat){
+                            if(sob.data[i].key === args.key || !args.key){
+                                results.data.push(sob.data[i]);
+                            }
                         }
                     }
                 }

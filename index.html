@@ -7,6 +7,7 @@
 		<link rel="stylesheet" href="./css/animate.min.css">
 		<link rel="stylesheet" href="./dist/rmodal-no-bootstrap.css" type="text/css" />
 		<link rel="stylesheet" href="./css/style.css">
+        <link rel="stylesheet" href="./css/search-form.css">
 	</head>
 	<body>
 		<div>
@@ -38,6 +39,20 @@
 									<!--显示页码数，前翻页，后翻页，当前页码-->
 									<div class=" tablePageinate">
 									</div>
+
+                                    <!--动态搜索框-->
+                                    <section class="container">
+                                        <form onsubmit="submitFn(this, event);">
+                                            <div class="search-wrapper">
+                                                <div class="input-holder">
+                                                    <input type="text" class="search-input" placeholder="格式: 厂家&型号&名称" />
+                                                    <button class="search-icon" onclick="searchToggle(this, event);"><span></span></button>
+                                                </div>
+                                                <span class="close" onclick="searchToggle(this, event);"></span>
+                                            </div>
+                                        </form>
+                                    </section>
+
 									<!--可选择每页暂时数据条数-->
 									<div class="digitalLength" >
 										<label>每页显示
@@ -86,11 +101,13 @@
         </div>
 	</body>
 	<script src="./js/jquery-1.12.3.js"></script>
+	<script src="./js/html5hiv.min.js"></script>
     <script src="./js/jsoner.js"></script>
     <script src="./js/config.js"></script>
     <script src="./js/link.js"></script>
     <script src="./dist/rmodal.js"></script>
 	<script src="./js/data.js"></script>
 	<script src="./js/table.js"></script>
+	<script src="./js/searchBar.js"></script>
     <script src="./js/init.js"></script>
 </html>
