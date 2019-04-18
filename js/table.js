@@ -398,7 +398,7 @@ function changePages(pageNum){
     }else{
         filtrateTable=backupAataArray.slice(0);
     }
-    getDatas("/changeTableNum?tableNum=" + tableNum);
+    getDatas("changeTableNum?tableNum=" + tableNum);
     tableCreate();
     createPages();
 }
