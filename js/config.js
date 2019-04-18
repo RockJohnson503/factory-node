@@ -10,10 +10,10 @@ currentPageNum=1;//当前所在页码;
 pageFixedNum=6;//初始化定的页码数量
 dataSet=new Set();//用集合来存储选中的数据
 roleSelect=[];//角色下拉框数据;
-pagesChoose=[5, 10, 20];//自定义每页数据显示条数，可修改
+pagesChoose=[10, 15, 20];//自定义每页数据显示条数，可修改
 setOn=true;
 dataName = path.indexOf("index") !== -1 ? "turnoverData" : "detailData";
-useData = getDatas("/getJsonData?cur=" + dataName);//当前使用的数据
+useData = getDatas("getJsonData?cur=" + dataName);//当前使用的数据
 
 
 //filtrateTable[i].first + filtrateTable[i].in - filtrateTable[i].out
