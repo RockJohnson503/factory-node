@@ -134,12 +134,12 @@ RModal.prototype._doOpen = function _doOpen () {
     this.opened = true;
 };
 
-RModal.prototype.close = function close (status, node="") {
+RModal.prototype.close = function close (status) {
     let this$1 = this;
 
     //0表示取消,1表示确定
     if(status === 1){
-        checkOpDatas(node);
+        checkOpDatas();
     }
     if (!is(this.opts.beforeClose, 'function')) {
         return this._doClose();
