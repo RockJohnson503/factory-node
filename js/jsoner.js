@@ -14,7 +14,7 @@ function getDatas(urls){
         },
         error : function (err) {
             console.log(err)
-            alert("数据获取失败!");
+            alert("数据获取失败!code(0)");
             return null;
         }
     });
@@ -29,7 +29,11 @@ function jsonSearch(args, sob = useData){
         if(sob.data[i].factory === args.factory || !args.factory) {
             if(sob.data[i].id === args.id || !args.id){
                 if(sob.data[i].name === args.name || !args.name){
-                    results.data.push(sob.data[i]);
+                    if(sob.data[i].operat === args.operat || !args.operat){
+                        if(sob.data[i].key === args.key || !args.key){
+                            results.data.push(sob.data[i]);
+                        }
+                    }
                 }
             }
         }
