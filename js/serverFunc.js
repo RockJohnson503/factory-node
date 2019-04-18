@@ -66,7 +66,7 @@ exports.writeFiler = function (request, response, url, fileUrl) {
 
     fs.readFile(fileUrl, function (err, data) {
         if(err){
-            response.writeHead(404, {'Content-Type': 'text/Json', "Access-Control-Allow-Origin": "http://localhost:8080",
+            response.writeHead(404, {'Content-Type': 'text/Json', "Access-Control-Allow-Origin": "*",
                             "Access-Control-Allow-Credentials": "true"});
         }else{
             if(datas){

@@ -6,7 +6,7 @@ json数据的操作方法
 function getDatas(urls){
     let results;
     $.ajax({
-        url : "http://localhost:8080/" + urls,
+        url : location.protocol + "//" + location.hostname + ":" + location.port + "/" + urls,
         type : "post",
         async : false,
         success : function (data) {
