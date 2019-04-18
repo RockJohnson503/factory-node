@@ -26,7 +26,7 @@
 	                    </tr>
 	                </thead>
 	                <tbody>
-			           <div class="reminder"><p>没有检索到数据</p></div>
+                        <tr><td colspan="8"><div class="reminder"><p>没有检索到数据</p></div></td></tr>
 	                </tbody>
 					<tfoot>
 						<tr>
@@ -71,14 +71,14 @@
                                     <input placeholder="批次号..." type="text" name="keys" class="form-control" />
                                 </div>
                                 <div class="input-group col-xs-7">
-                                    <input placeholder="数量..." type="text" name="amounts" class="form-control" />
+                                    <input placeholder="数量..." onfocus="this.addEventListener('keypress', function(ev){if(ev.which === 13){modal.close(1);}})" type="text" name="amounts" class="form-control" />
                                 </div>
                             </div>
                         </div>
 
                         <div class="modal-footer">
                             <button class="btn btn-default" type="button" onclick="modal.close(0);">取消</button>
-                            <button class="btn btn-primary" type="button" onclick="modal.close(1, this);">确认</button>
+                            <button class="btn btn-primary" type="button" onclick="modal.close(1);">确认</button>
                         </div>
                     </form>
                 </div>
