@@ -73,13 +73,25 @@ exports.writeFiler = function (request, response, url, fileUrl) {
                 data = JSON.parse(data);
 
                 //判断这条数据是否存在
-                for(let i in data.data){
-                    if(datas.id === data.data[i].id &&
-                        datas.factory === data.data[i].factory &&
-                        datas.name === data.data[i].name && fileUrl.indexOf("turnoverData") !== -1){
-                        exist = 1;
-                        for(let q in data.data[i]){
-                            data.data[i][q] = datas[q];
+                if(fileUrl.indexOf("turnoverData") !== -1){
+                    for(let i in data.data){
+                        if(datas.id === data.data[i].id &&
+                            datas.factory === data.data[i].factory &&
+                            datas.name === data.data[i].name){
+                            exist = 1;
+                            for(let q in data.data[i]){
+                                data.data[i][q] = datas[q];
+                            }
+                        }
+                    }
+                }
+                if(fileUrl.indexOf("keyNum") !== -1){
+                    for(let i in data.data){
+                        if(datas.key === data.data[i].key){
+                            exist = 1;
+                            for(let q in data.data[i]){
+                                data.data[i][q] = datas[q];
+                            }
                         }
                     }
                 }
