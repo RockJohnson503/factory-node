@@ -14,6 +14,3 @@ pagesChoose=[10, 15, 20];//自定义每页数据显示条数，可修改
 setOn=true;
 dataName = path.indexOf("index") !== -1 ? "turnoverData" : "detailData";
 useData = getDatas("getJsonData?cur=" + dataName);//当前使用的数据
-
-
-//filtrateTable[i].first + filtrateTable[i].in - filtrateTable[i].out
