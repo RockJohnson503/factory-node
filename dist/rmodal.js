@@ -28,7 +28,7 @@ function loadModal() {
             alert("没有现存,无法领料!");
             return ;
         }
-        idOperat(thisId, thisOperat);
+        idOperat(thisFactory, thisId, thisName, thisOperat);
         ev.preventDefault();
         modal.open();
     });
@@ -134,12 +134,12 @@ RModal.prototype._doOpen = function _doOpen () {
     this.opened = true;
 };
 
-RModal.prototype.close = function close (status) {
+RModal.prototype.close = function close (status, node="") {
     let this$1 = this;
 
     //0表示取消,1表示确定
     if(status === 1){
-        checkOpDatas();
+        checkOpDatas(node);
     }
     if (!is(this.opts.beforeClose, 'function')) {
         return this._doClose();
