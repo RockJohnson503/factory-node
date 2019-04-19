@@ -73,21 +73,11 @@ exports.writeFiler = function (request, response, url, fileUrl) {
                 data = JSON.parse(data);
 
                 //判断这条数据是否存在
-                if(fileUrl.indexOf("turnoverData") !== -1){
+                if(fileUrl.indexOf("detailData") === -1){
                     for(var i in data.data){
                         if(datas.id === data.data[i].id &&
                             datas.factory === data.data[i].factory &&
-                            datas.name === data.data[i].name){
-                            exist = 1;
-                            for(var q in data.data[i]){
-                                data.data[i][q] = datas[q];
-                            }
-                        }
-                    }
-                }
-                if(fileUrl.indexOf("keyNum") !== -1){
-                    for(var i in data.data){
-                        if(datas.key === data.data[i].key){
+                            datas.name === data.data[i].name && (datas.key === data.data[i].key || !datas.key)){
                             exist = 1;
                             for(var q in data.data[i]){
                                 data.data[i][q] = datas[q];
