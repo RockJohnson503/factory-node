@@ -1,4 +1,7 @@
 //加载弹框
+$(".form-control").bind("keypress", function (ev) {
+    if(ev.which === 13){modal.close(1);}
+});
 function loadModal() {
     let modal = new RModal(document.getElementById('modal'), {
         beforeOpen: function(next) {
