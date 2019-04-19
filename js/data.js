@@ -23,11 +23,23 @@ function checkOpDatas() {
     let thisName = modalHeader.getAttribute("_name");
     let key = $("input[name = 'keys']").val();
     let amounts = Number($("input[name = 'amounts']").val());
+    let dates = $("input[name = 'dates']").val();
     let date = new Date();
     let results = [];
     let product = jsonSearch({"factory": thisFactory, "id": thisId, "name": thisName}).data[0];
     let keys = getDatas("getJsonData?cur=keyNum");
 
+    if(dates && !/(\d{1,2})\-(\d{1,2})/.test(dates)){
+        alert("请输入正确的时间!");
+        return ;
+    }
+    let txt = (key ? ("批次号: " + key + ", ") : "") + "数量: " + amounts + ", 时间: " + dates;
+    let check = confirm("您输入的数据为:\n" + txt + "\n请仔细确认!");
+    if(!check){
+        return ;
+    }
+
+    //具体操作
     if(modalHeader.innerText.indexOf("入库") !== -1){
         if(!key || !amounts){
             alert("请输入批次号和数量!");
@@ -50,9 +62,9 @@ function checkOpDatas() {
             "key": key,
             "operat": "入库",
             "num": amounts,
-            "date": date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()
+            "date": date.getFullYear() + "-" + (dates || (date.getMonth()+1) + "-" + date.getDate())
         });
-        results.push({"key": key, "num": amounts});
+        results.push({"factory": thisFactory, "id": thisId, "name": thisName, "key": key, "num": amounts});
 
         if(jsonPush(JSON.stringify(results[0]), "turnoverData") !== null &&
             jsonPush(JSON.stringify(results[1]), "detailData") !== null &&
@@ -92,7 +104,7 @@ function checkOpDatas() {
 
         for(let i = allIn.length - 1; i >= 0; i--){
             curKey = allIn[i].key;//当前的批次号
-            curKeys = jsonSearch({"key": curKey}, false, keys).data[0];
+            curKeys = jsonSearch({"key": curKey, "factory": thisFactory, "id": thisId, "name": thisName}, false, keys).data[0];
 
             //检查该批次号是否有库存
             if(curKeys.num === 0){
