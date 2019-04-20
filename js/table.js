@@ -68,7 +68,7 @@ function tableCreate(){
             "<td>"+((flag ? filtrateTable[i].num : filtrateTable[i].in)||0)+"</td>"+
             "<td>"+((flag ? filtrateTable[i].date : filtrateTable[i].out)||0)+"</td>"+
             (flag ? "" : "<td><button class='checkBtn showModal'>入库</button>" +
-            "<button class='checkBtn showModal ml'>领料</button></td>") +
+            "<button " + (filtrateTable[i].now <= 0 ? "disabled='disabled'" : "") + " class='checkBtn showModal ml'>领料</button></td>") +
         "</tr>");
         //按照集合内容判断现选中的input 翻页保留选中效果
         if(setOn){
