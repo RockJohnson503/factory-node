@@ -34,7 +34,7 @@ function checkOpDatas() {
         return ;
     }
     let txt = (key ? ("批次号: " + key + ", ") : "") + "数量: " + amounts + ", 时间: " + dates;
-    let check = confirm("您输入的数据为:\n" + txt + "\n请仔细确认!");
+    let check = confirm("您输入的信息是:\n" + txt + "\n请仔细确认!");
     if(!check){
         return ;
     }
@@ -201,16 +201,47 @@ function checkAddDatas(node) {
         ",  名称: " + results.name + ",  期初: " + results.first +
         ",  现存: " + results.now + ",  入库合计: " + results.in +
         ",  领料合计: " + results.out;
-    let check = confirm("您输入的数据为:\n" + txt + "\n请仔细确认!");
+    let check = confirm("您输入的产品是:\n" + txt + "\n请仔细确认!");
     if(!check){
         return ;
     }
 
     let q = jsonPush(JSON.stringify(results));
     if(q !== null){
-        alert("添加数据成功!");
+        alert("添加产品成功!");
         location.reload();
     }else{
-        alert("添加数据失败!code(2)");
+        alert("添加产品失败!code(2)");
+    }
+}
+
+//修改产品信息
+function changeProduct(node, fFactory, fId, fName) {
+    let tds = node.parent().parent().children();
+    let vals = [tds.eq(0).find("input").val(), tds.eq(1).find("input").val(), tds.eq(2).find("input").val(), tds.eq(3).find("input").val()];
+    let txt = "厂家: " + vals[0] + ",  型号: " + vals[1] +
+        ",  名称: " + vals[2] + ",  期初: " + vals[3];
+    let check = confirm("您修改后的的产品是:\n" + txt + "\n请仔细确认!");
+    if(!check){
+        return ;
+    }
+
+    let results = [
+        {
+         "factory": fFactory,
+         "id": fId,
+         "name": fName
+        },{
+        "factory": vals[0],
+        "id": vals[1],
+        "name": vals[2],
+        "first": vals[3]
+        }];
+
+    if(getDatas("changeProduct?origin=" + JSON.stringify(results[0]) + "&datas=" + JSON.stringify(results[1])) !== null){
+        alert("修改产品成功!");
+        location.reload();
+    }else{
+        alert("修改产品失败!code(10)");
     }
 }
