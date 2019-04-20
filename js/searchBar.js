@@ -32,9 +32,15 @@ function submitFn(obj, evt){
     value = value.split("&");
     if(value.length <= 1){
         //说明只有一个字符
-        location.assign("./index.html?sear=" + value[0]);
+        if(location.pathname === "/index.html"){
+            location.assign("." + location.pathname + "?sear=" + value[0]);
+        }else{
+            let urlp = location.search.toString().substr(1);
+            urlp = urlp.indexOf("date") !== -1 ? urlp.substr(urlp.indexOf("&") + 1) : urlp;
+            location.assign("." + location.pathname + "?date=" + value[0] + "&" + urlp);
+        }
     }else{
-        location.assign("./index.html?factory=" + value[0] + "&id=" + value[1] + "&name=" + (value[2] || ""));
+        location.assign("." + location.pathname + "?factory=" + value[0] + "&id=" + value[1] + "&name=" + (value[2] || ""));
     }
 
     evt.preventDefault();
