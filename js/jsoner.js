@@ -33,12 +33,14 @@ function jsonSearch(args, match=false, sob = useData){
         }
     }else{
         for(let i in sob.data){
-            if(sob.data[i].factory === args.factory || !args.factory) {
-                if(sob.data[i].id === args.id || !args.id){
-                    if(sob.data[i].name === args.name || !args.name){
-                        if(sob.data[i].operat === args.operat || !args.operat){
-                            if(sob.data[i].key === args.key || !args.key){
-                                results.data.push(sob.data[i]);
+            if(!args.factory || sob.data[i].factory === args.factory) {
+                if(!args.id || sob.data[i].id === args.id){
+                    if(!args.name || sob.data[i].name === args.name){
+                        if(!args.operat || sob.data[i].operat === args.operat){
+                            if(!args.key || sob.data[i].key === args.key){
+                                if(!args.date || sob.data[i].date.indexOf(args.date) !== -1){
+                                    results.data.push(sob.data[i]);
+                                }
                             }
                         }
                     }
