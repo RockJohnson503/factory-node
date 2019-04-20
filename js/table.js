@@ -8,7 +8,7 @@
 function tableInit(result,dataNum,pages,setOpen){
     setOn=setOpen;
     if(!dataNum){
-        alert("请填写正确的每页展示数据格式！code(1)")
+        alert("请填写正确的每页展示产品格式！code(1)")
     }else{
         if(typeof dataNum === "number"){
             tableNum=dataNum;
@@ -50,6 +50,15 @@ function tableInit(result,dataNum,pages,setOpen){
 }
 /*)*/
 
+//连接跳转
+function href(node) {
+   let tr = node.parent().parent();
+   let trFactory = tr.children().eq(0).text();
+   let trId = node.text();
+   let trName = tr.children().eq(2).text();
+
+   window.location.assign("./keys.html?factory=" + trFactory + "&id=" + trId + "&name=" + trName);
+}
 
 /*创建table数据*/
 function tableCreate(){
@@ -61,7 +70,7 @@ function tableCreate(){
     for(let i in filtrateTable){
         let trHtml=$("<tr>"+
             "<td>"+(filtrateTable[i].factory || '空')+"</td>"+
-            "<td><span>"+filtrateTable[i].id+"</span></td>"+
+            "<td><span onclick='href($(this))'>"+filtrateTable[i].id+"</span></td>"+
             "<td>"+filtrateTable[i].name+"</td>"+
             "<td>"+((flag ? filtrateTable[i].key : filtrateTable[i].first)||0) +"</td>"+
             "<td>"+((flag ? filtrateTable[i].operat : filtrateTable[i].now)||0)+"</td>"+
@@ -173,15 +182,6 @@ function tableCreate(){
     if(!flag){
         loadModal();
     }
-    //加载跳转
-    $("#userImportTable tbody td:nth-child(2) span").bind("click", function () {
-       tr = this.parentNode.parentNode;
-       trFactory = tr.childNodes[0].innerText;
-       trId = this.innerText;
-       trName = tr.childNodes[2].innerText;
-
-       window.location.assign("./keys.html?factory=" + trFactory + "&id=" + trId + "&name=" + trName);
-    });
 }
 
 /*创建翻页*/
@@ -401,7 +401,6 @@ function changePages(pageNum){
     tableCreate();
     createPages();
 }
-/*设置每页显示的条数E*/
 
 //取消输入
 function cancle(node) {
@@ -410,10 +409,20 @@ function cancle(node) {
     tbody.removeChild(tr);
 }
 
-/*按钮点击事件E*/
+//检查是否有操作
+function checkOperat(node) {
+    if(node.hasClass("adding") || node.hasClass("changing")){
+        alert("正在添加或修改产品, 无法切换操作!");
+        return true;
+    }
+}
+
 //获取当前点击数量极其下标 展示获取的数据
 function addDatas(){
-    let trHtml=$("<tr>"+
+    let trs = $("#userImportTable tbody tr");
+
+    if(checkOperat(trs)){return ;}
+    let trHtml=$("<tr class='adding'>"+
         "<td><div class='ui input'><input type='text' placeholder='请输入...'></div></td>"+
         "<td><div class='ui input'><input type='text' placeholder='请输入...'></div></td>"+
         "<td><div class='ui input'><input type='text' placeholder='请输入...'></div></td>"+
@@ -425,4 +434,63 @@ function addDatas(){
         "<button class='checkBtn ml' onclick='cancle(this)'>取消</button></td>"+
     "</tr>");
     $("#userImportTable>tbody").append(trHtml);
+}
+
+//取消修改产品
+function cancleOperat(node, fFactory, fId, fName, fFirst) {
+    let tds = node.parent().parent().children();
+    let vals = [fFactory, fId, fName, fFirst];
+
+    for(let i = 0; i < 4; i++){
+        let txtHtml = i === 1 ? $("<span onclick='href($(this))'>" + vals[i] + "</span>") : vals[i];
+        tds.eq(i).empty()
+        tds.eq(i).append(txtHtml);
+    }
+
+    node.parent().empty();
+    tds.eq(-1).append($("<button class='checkBtn' onclick='changeDatas($(this))'>修改</button>"));
+    tds.parent().removeClass("changing")
+}
+
+//修改产品
+function changeDatas(node){
+    let tds = node.parent().parent().children();
+    let vals = [tds.eq(0).text(), tds.eq(1).text(), tds.eq(2).text(), tds.eq(3).text()];
+    let btn = $("<button class='checkBtn' onclick='changeProduct($(this), \"" + vals[0] + "\", \"" + vals[1] + "\", \"" +
+        vals[2] + "\")'>确定</button>" +
+        "<button class='checkBtn ml' onclick='cancleOperat($(this), \"" + vals[0] + "\", \"" + vals[1] + "\", \"" +
+        vals[2] + "\", \"" + vals[3] + "\")'>取消</button></td>");
+
+    if(checkOperat(tds.parent().parent().children())){return ;}
+    //加上标示
+    tds.parent().addClass("changing");
+    for(let i = 0; i < 4; i++){
+        tds.eq(i).empty();
+        tds.eq(i).append($("<div class='ui input'><input type='text' value='" + vals[i] + "'/></div>"));
+    }
+    node.parent().empty();
+    tds.eq(-1).append(btn);
+}
+
+//改变操作按钮
+function operatToggle() {
+    let trs = $("#userImportTable tbody tr");
+
+    if(checkOperat(trs)){return ;}
+    for(let i = 0; i < trs.length; i++){
+        let optd = trs.eq(i).children().eq(-1);//操作栏的td
+
+        if(optd.children().length === 2){
+            optd.empty();
+            optd.append($("<button class='checkBtn' onclick='changeDatas($(this))'>修改</button>"));
+        }else{
+            optd.empty();
+            let txtHmlt = $("<button class='checkBtn showModal'>入库</button>" +
+                "<button" + (filtrateTable[i].now <= 0 ? " disabled='disabled'" : "") + " class='checkBtn showModal ml'>领料</button>");
+            optd.append(txtHmlt);
+
+            //加载弹窗
+            loadModal();
+        }
+    }
 }
