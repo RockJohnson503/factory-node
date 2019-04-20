@@ -106,6 +106,48 @@ exports.writeFiler = function (request, response, fileUrl) {
     });
 };
 
+//修改数据
+exports.changeFiler = function(request, response, fileUrl){
+    //获取参数
+    var args = request.url.split("?")[1].split("&");
+    var datas = JSON.parse(decodeURIComponent(args[1].split("=")[1]));
+    var origin = JSON.parse(decodeURIComponent(args[0].split("=")[1]));
+
+    fs.readFile(fileUrl, function (err, data) {
+        if(err){
+            response.writeHead(404, {'Content-Type': 'text/Json', "Access-Control-Allow-Origin": "*",
+                            "Access-Control-Allow-Credentials": "true"});
+        }else{
+            data = JSON.parse(data);
+
+            for(let i in data.data){
+                if(data.data[i].factory === origin.factory && data.data[i].id === origin.id && data.data[i].name === origin.name){
+                    data.data[i].factory = datas.factory;
+                    data.data[i].id = datas.id;
+                    data.data[i].name = datas.name;
+                    data.data[i].first = datas.first;
+                    data.data[i].now = Number(datas.first) + data.data[i].in - data.data[i].out;
+
+                    break;//结束循环
+                }
+            }
+
+            args = JSON.stringify(data);
+            fs.writeFile(fileUrl, args, function (err) {
+                if(err){
+                    response.writeHead(404, {'Content-Type': 'text/json', "Access-Control-Allow-Origin": "http://localhost:8080",
+                            "Access-Control-Allow-Credentials": "true"});
+                }else{
+                    response.writeHead(200, {'Content-Type': 'text/json', "Access-Control-Allow-Origin": "http://localhost:8080",
+                            "Access-Control-Allow-Credentials": "true"});
+                }
+            });
+        }
+        //  发送响应数据
+        response.end();
+    });
+};
+
 //期初折账
 exports.first = function (request, response, fileUrl) {
     fs.readFile(fileUrl, function (err, data) {
