@@ -23,7 +23,7 @@
 	                        <th>现存</th>
 	                        <th>入库合计</th>
 	                        <th>领料合计</th>
-							<th>操作</th>
+							<th><span onclick="operatToggle()" style="cursor:pointer;" title="切换操作">操作</span></th>
 	                    </tr>
 	                </thead>
 	                <tbody>
@@ -34,7 +34,7 @@
 	                    	<th colspan="8" height="30">
 								<div class="userImportTableBottom">
 									<div class="dataTablesInfo"  role="status" aria-live="polite">
-										<button class="showDatasBtn" onclick="addDatas()">添加数据</button>
+										<button class="showDatasBtn" onclick="addDatas()">添加产品</button>
 									</div>
 									<!--显示页码数，前翻页，后翻页，当前页码-->
 									<div class=" tablePageinate">
