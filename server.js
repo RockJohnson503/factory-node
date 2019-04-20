@@ -10,9 +10,9 @@ var func = require("./js/serverFunc");
 http.createServer( function (request, response) {  
     // 解析请求，包括文件名
     var pathname = url.parse(request.url).pathname;
-    var urls = ["/getTableNum", "/getJsonData", "/changeTableNum", "/changeJsonData"];
-    var fileUrls = ["./data/tableNum.txt","./data/?.json", "./data/tableNum.txt", "./data/?.json"];
-    var funcs = [func.getFiler, func.getFiler, func.writeFiler, func.writeFiler];
+    var urls = ["/getTableNum", "/getJsonData", "/changeTableNum", "/changeJsonData", "/first"];
+    var fileUrls = ["./data/tableNum.txt","./data/?.json", "./data/tableNum.txt", "./data/?.json", "./data/turnoverData.json"];
+    var funcs = [func.getFiler, func.getFiler, func.writeFiler, func.writeFiler, func.first];
     func.status = 0;
 
     //路由
