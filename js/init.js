@@ -1,7 +1,7 @@
 /*
 全局初始化
  */
-let flag = path.indexOf("index") !== -1 && !location.search.toString().substring(1);
+let flag = path.indexOf("index") !== -1 && !location.search.toString().substr(1);
 let tableNum = getDatas("getTableNum");//获取当前表的展示数量
 let firstMonth = useData.month;//期初的月份
 let date = new Date();
