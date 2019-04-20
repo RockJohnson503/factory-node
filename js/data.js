@@ -94,7 +94,7 @@ function checkOpDatas() {
 
         //判断领料量是否超出库存
         if(amounts > product.now){
-            alert("领料量以及超出库存!");
+            alert("领料量已经超出库存!");
             return ;
         }
 
