@@ -253,15 +253,14 @@ function createPages(){
         if($(".pageBtnS>a").eq(pageNum-1).css("display")==="none" && $(".pageBtnS>a").eq(pageNum-2).css("display")==="none"){
             $(".pageBtnS>a").eq(pageNum-1).css("display","inline-block")
         }
-        /*console.log(pageNum);*/
-        if(pageNum<4){
+        if(pageNum<3){
             $(".previousEllipsis").hide();
             $(".nextEllipsis").show();
 
             for(let i = 1;i<4;i++){
                 $(".pageBtnS>a").eq(i).css("display","inline-block");
             }
-            for(let i =2;i<pagesNum-4;i++){
+            for(let i =2;i<pagesNum-3;i++){
                 $(".pageBtnS>a").eq(pagesNum-i).css("display","none");
             }
             return false;
@@ -318,7 +317,7 @@ function createPages(){
             }
             return false;
         }
-        if(pageNum>=6){
+        if(pageNum>=5){
             $(".previousEllipsis").show();
             for(let i=1;i<pageNum-3;i++){
                 $(".pageBtnS>a").eq(i).css("display","none");
@@ -329,27 +328,26 @@ function createPages(){
     $(".pageBtnS .pageinateBtn").bind("click",function(){
         let currentPageNum=parseInt($(this).attr("pageId"));
         /*控制前省略号显示事件，页码在5和倒数第3时触发事件*/
-        if(currentPageNum<=5){
+        if(currentPageNum<=3){
             $(".previousEllipsis").hide();
             $(".nextEllipsis").show();
-            for(let i =1;i<5;i++){
+            for(let i =1;i<4;i++){
                 $(".pageBtnS>a").eq(i).css("display","inline-block");
             }
-            for(let j=5;j<pagesNum-1;j++){
+            for(let j=4;j<pagesNum-2;j++){
                 $(".pageBtnS>a").eq(j).css("display","none");
             }
         }
         /*前后翻页省略*/
-        if(currentPageNum>4&&pagesNum-currentPageNum>=3){
+        if(currentPageNum>3&&pagesNum-currentPageNum>=3){
             $(".previousEllipsis").show();
             $(".nextEllipsis").show();
-            $(".pageBtnS>a").eq(currentPageNum-2).css("display","inline-block");
-            $(".pageBtnS>a").eq(currentPageNum).css("display","inline-block");
-            for(let i =1;i<pageNum-2;i++){
-                $(".pageBtnS>a").eq(i).css("display","none");
-            }
-            for(let j=currentPageNum+1;j<pagesNum-1;j++){
+
+            for(let j=1;j<pagesNum-1;j++){
                 $(".pageBtnS>a").eq(j).css("display","none");
+            }
+            for(let i = currentPageNum  - 2; i < currentPageNum + 1; i++){
+                $(".pageBtnS>a").eq(i).css("display","inline-block");
             }
         }
         /*后翻省略*/
