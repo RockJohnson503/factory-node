@@ -27,3 +27,9 @@ if(!flag){
     $(".dataTablesInfo button").eq(0).text("返回主页");
     $(".dataTablesInfo button").eq(0).attr("onclick", "window.location.assign('./index.html')");
 }
+let tableBottom = Number($(".userImportTableBottom").css("width").replace("px", ""));
+let addBtn = Number($(".dataTablesInfo").css("width").replace("px", ""));
+let pageInate = Number($(".tablePageinate").css("width").replace("px", ""));
+let digital = Number($(".digitalLength").css("width").replace("px", ""));
+let left = (tableBottom - addBtn - pageInate - digital) / 2 + 20;
+$(".search-wrapper").css("left", left + "px");
