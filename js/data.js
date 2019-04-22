@@ -101,6 +101,9 @@ function checkOpDatas() {
         //修改产品的数量
         product.out += amounts;
         product.now = product.first + product.in - product.out;
+        if(allIn.length === 0){
+            if(jsonPush(JSON.stringify(result), "detailData") === null){alert("领料失败!code(6)");return;}
+        }
 
         for(let i = allIn.length - 1; i >= 0; i--){
             curKey = allIn[i].key;//当前的批次号
@@ -216,32 +219,27 @@ function checkAddDatas(node) {
 }
 
 //修改产品信息
-function changeProduct(node, fFactory, fId, fName) {
-    let tds = node.parent().parent().children();
-    let vals = [tds.eq(0).find("input").val(), tds.eq(1).find("input").val(), tds.eq(2).find("input").val(), tds.eq(3).find("input").val()];
-    let txt = "厂家: " + vals[0] + ",  型号: " + vals[1] +
-        ",  名称: " + vals[2] + ",  期初: " + vals[3];
-    let check = confirm("您修改后的的产品是:\n" + txt + "\n请仔细确认!");
-    if(!check){
+function changeProduct(td, type, rData) {
+    let vals = td.find("input").val();
+    let datas = {};
+    let results = [{"factory": td.parent().children().eq(0).text(), "id": td.parent().children().eq(1).text(),
+        "name": td.parent().children().eq(2).text()}];
+    let first = Number(type === "first" ? vals : td.parent().children().eq(3).text());
+    let oin = Number(td.parent().children().eq(5).text());
+    let out = Number(td.parent().children().eq(6).text());
+
+    datas[type] = vals;
+    results.push(datas);
+    for(let i = 0; i < 3; i++){
+        if(td.parent().children().eq(i).attr("_val")){
+            results[0][type] = rData;
+        }
+    }
+
+    if(getDatas("changeProduct?origin=" + JSON.stringify(results[0]) + "&datas=" + JSON.stringify(results[1])) === null){
+        alert("修改产品失败!code(10)");
         return ;
     }
-
-    let results = [
-        {
-         "factory": fFactory,
-         "id": fId,
-         "name": fName
-        },{
-        "factory": vals[0],
-        "id": vals[1],
-        "name": vals[2],
-        "first": vals[3]
-        }];
-
-    if(getDatas("changeProduct?origin=" + JSON.stringify(results[0]) + "&datas=" + JSON.stringify(results[1])) !== null){
-        alert("修改产品成功!");
-        location.reload();
-    }else{
-        alert("修改产品失败!code(10)");
-    }
+    td.text(vals);
+    td.parent().children().eq(4).text(first + oin - out);
 }
