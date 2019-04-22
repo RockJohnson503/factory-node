@@ -13,7 +13,11 @@ function loadModal() {
     });
 
     document.addEventListener('keydown', function(ev) {
-        modal.keydown(ev);
+        if(ev.which === 27 && $("#userImportTable tr").hasClass("changing")){
+            cancleOperat($("#changeInp"))
+        }else{
+            modal.keydown(ev);
+        }
     }, false);
 
     $(".showModal").bind("click", function (ev) {
