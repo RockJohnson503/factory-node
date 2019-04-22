@@ -27,7 +27,7 @@ function jsonSearch(args, match=false, sob = useData){
 
     if(match){
         for(let i in sob.data){
-            if(sob.data[i].factory === args.sear || sob.data[i].id === args.sear || sob.data[i].name === args.sear){
+            if(sob.data[i].factory.indexOf(args.sear) !== -1 || sob.data[i].id.indexOf(args.sear) !== -1 || sob.data[i].name.indexOf(args.sear) !== -1){
                 results.data.push(sob.data[i]);
             }
         }
