@@ -60,6 +60,39 @@ function href(node) {
    window.location.assign("./keys.html?factory=" + trFactory + "&id=" + trId + "&name=" + trName);
 }
 
+//取消修改产品
+function cancleOperat(node) {
+    let td = node.parent().parent();
+    let vals = td.attr("_val");
+
+    let txtHtml = td.attr("_id") === "1" ? $("<span onclick='href($(this))'>" + vals + "</span>") : vals;
+    td.empty()
+    td.append(txtHtml);
+
+    td.parent().removeClass("changing");
+}
+
+//修改产品
+function changeDatas(td, type){
+    let vals = td.text();
+
+    if(checkOperat(td.parent().parent().children())){return ;}
+    //加上标示
+    td.parent().addClass("changing");
+    if(type === "id"){td.attr("_id", 1)}
+    td.attr("_val", vals);
+    td.empty();
+    td.append($("<div class='ui input'><input id='changeInp' autofocus type='text' value='" + vals + "'/></div>"));
+
+    //修改产品的开关
+    $("#changeInp").bind("keypress", function (ev) {
+        if(ev.which === 13){
+            changeProduct(td, type, vals);
+            td.parent().removeClass("changing");
+        }
+    });
+}
+
 /*创建table数据*/
 function tableCreate(){
     let flag = path.indexOf("keys") !== -1;
@@ -69,10 +102,10 @@ function tableCreate(){
     /*创建table里面的数据结构 td的各项值 S*/
     for(let i in filtrateTable){
         let trHtml=$("<tr>"+
-            "<td>"+(filtrateTable[i].factory || '空')+"</td>"+
-            "<td><span onclick='href($(this))'>"+filtrateTable[i].id+"</span></td>"+
-            "<td>"+filtrateTable[i].name+"</td>"+
-            "<td>"+((flag ? filtrateTable[i].key : filtrateTable[i].first)||0) +"</td>"+
+            "<td " + (flag ? "" : "style='cursor: pointer' ondblclick='changeDatas($(this), \"factory\")'") + ">"+(filtrateTable[i].factory || '空')+"</td>"+
+            "<td " + (flag ? "" : "style='cursor: pointer' ondblclick='changeDatas($(this), \"id\")'") + "><span onclick='href($(this))'>"+filtrateTable[i].id+"</span></td>"+
+            "<td " + (flag ? "" : "style='cursor: pointer' ondblclick='changeDatas($(this), \"name\")'") + ">"+filtrateTable[i].name+"</td>"+
+            "<td " + (flag ? "" : "style='cursor: pointer' ondblclick='changeDatas($(this), \"first\")'") + ">"+((flag ? filtrateTable[i].key : filtrateTable[i].first)||(flag ? '空' : 0)) +"</td>"+
             "<td>"+((flag ? filtrateTable[i].operat : filtrateTable[i].now)||0)+"</td>"+
             "<td>"+((flag ? filtrateTable[i].num : filtrateTable[i].in)||0)+"</td>"+
             "<td>"+((flag ? filtrateTable[i].date : filtrateTable[i].out)||0)+"</td>"+
@@ -432,63 +465,4 @@ function addDatas(){
         "<button class='checkBtn ml' onclick='cancle(this)'>取消</button></td>"+
     "</tr>");
     $("#userImportTable>tbody").append(trHtml);
-}
-
-//取消修改产品
-function cancleOperat(node, fFactory, fId, fName, fFirst) {
-    let tds = node.parent().parent().children();
-    let vals = [fFactory, fId, fName, fFirst];
-
-    for(let i = 0; i < 4; i++){
-        let txtHtml = i === 1 ? $("<span onclick='href($(this))'>" + vals[i] + "</span>") : vals[i];
-        tds.eq(i).empty()
-        tds.eq(i).append(txtHtml);
-    }
-
-    node.parent().empty();
-    tds.eq(-1).append($("<button class='checkBtn' onclick='changeDatas($(this))'>修改</button>"));
-    tds.parent().removeClass("changing")
-}
-
-//修改产品
-function changeDatas(node){
-    let tds = node.parent().parent().children();
-    let vals = [tds.eq(0).text(), tds.eq(1).text(), tds.eq(2).text(), tds.eq(3).text()];
-    let btn = $("<button class='checkBtn' onclick='changeProduct($(this), \"" + vals[0] + "\", \"" + vals[1] + "\", \"" +
-        vals[2] + "\")'>确定</button>" +
-        "<button class='checkBtn ml' onclick='cancleOperat($(this), \"" + vals[0] + "\", \"" + vals[1] + "\", \"" +
-        vals[2] + "\", \"" + vals[3] + "\")'>取消</button></td>");
-
-    if(checkOperat(tds.parent().parent().children())){return ;}
-    //加上标示
-    tds.parent().addClass("changing");
-    for(let i = 0; i < 4; i++){
-        tds.eq(i).empty();
-        tds.eq(i).append($("<div class='ui input'><input type='text' value='" + vals[i] + "'/></div>"));
-    }
-    node.parent().empty();
-    tds.eq(-1).append(btn);
-}
-
-//改变操作按钮
-function operatToggle() {
-    let trs = $("#userImportTable tbody tr");
-
-    if(checkOperat(trs)){return ;}
-    for(let i = 0; i < trs.length; i++){
-        let optd = trs.eq(i).children().eq(-1);//操作栏的td
-
-        if(optd.children().length === 2){
-            optd.empty();
-            optd.append($("<button class='checkBtn' onclick='changeDatas($(this))'>修改</button>"));
-        }else{
-            optd.empty();
-            let txtHmlt = $("<button class='checkBtn showModal'>入库</button>" +
-                "<button" + (filtrateTable[i].now <= 0 ? " disabled='disabled'" : "") + " class='checkBtn showModal ml'>领料</button>");
-            optd.append(txtHmlt);
-
-            //加载弹窗
-            loadModal();
-        }
-    }
 }
