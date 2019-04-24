@@ -45,12 +45,6 @@ function checkOpDatas() {
             alert("请输入批次号和数量!");
             return ;
         }
-        for(let i in keys.data){
-            if(keys.data[i].key === key){
-                alert("您输入了重复的批次号!");
-                return ;
-            }
-        }
 
         product.in += amounts;
         product.now = product.first + product.in - product.out;
