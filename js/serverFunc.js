@@ -74,10 +74,15 @@ exports.writeFiler = function (request, response, fileUrl) {
                     for(var i in data.data){
                         if(datas.id === data.data[i].id &&
                             datas.factory === data.data[i].factory &&
-                            datas.name === data.data[i].name && (datas.key === data.data[i].key || !datas.key)){
+                            datas.name === data.data[i].name && (!datas.key || datas.key === data.data[i].key)){
                             exist = 1;
-                            for(var q in data.data[i]){
-                                data.data[i][q] = datas[q];
+                            if(!datas.key){
+                                for(var q in data.data[i]){
+                                    data.data[i][q] = datas[q];
+                                }
+                            }else{
+                                data.data[i].num += datas.num;
+                                break;
                             }
                         }
                     }
@@ -199,6 +204,95 @@ exports.changeFiler = function(request, response, fileUrl){
     response.end();
 };
 
+//删除产品
+exports.deleteFiler = function(request, response, fileUrl){
+    //获取参数
+    var origin = JSON.parse(decodeURIComponent(request.url.split("?")[1].split("=")[1]));
+
+    //删除turnover
+    fs.readFile(fileUrl[0], function (err, data1) {
+        if(err){response.writeHead(404, {'Content-Type': 'text/Json', "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Credentials": "true"});}
+        else{
+            data1 = JSON.parse(data1);
+
+            for(let i in data1.data){
+                if(data1.data[i].factory === origin.factory && data1.data[i].id === origin.id && data1.data[i].name === origin.name){
+                    deleteArray(data1.data, Number(i));
+                    break;//结束循环
+                }
+            }
+
+            data1 = JSON.stringify(data1);
+            fs.writeFile(fileUrl[0], data1, function (err) {
+                if(err){response.writeHead(404, {'Content-Type': 'text/json', "Access-Control-Allow-Origin": "*",
+                            "Access-Control-Allow-Credentials": "true"});}
+                else{
+                    response.writeHead(200, {'Content-Type': 'text/json', "Access-Control-Allow-Origin": "*",
+                            "Access-Control-Allow-Credentials": "true"});
+                }
+            });
+        }
+    });
+
+    //删除detail
+    fs.readFile(fileUrl[1], function (err, data2) {
+        if(err){response.writeHead(404, {'Content-Type': 'text/Json', "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Credentials": "true"});}
+        else{
+            let deletes1 = [];
+            data2 = JSON.parse(data2);
+
+            for(let q = 0; q < data2.data.length; q++) {
+                if (data2.data[q].factory === origin.factory && data2.data[q].id === origin.id && data2.data[q].name === origin.name) {
+                    deletes1.push(Number(q));
+                }
+            }
+            deleteArray(data2.data, deletes1);
+
+            data2 = JSON.stringify(data2);
+            fs.writeFile(fileUrl[1], data2, function (err) {
+                if(err){response.writeHead(404, {'Content-Type': 'text/json', "Access-Control-Allow-Origin": "*",
+                            "Access-Control-Allow-Credentials": "true"});}
+                else{
+                    response.writeHead(200, {'Content-Type': 'text/json', "Access-Control-Allow-Origin": "*",
+                            "Access-Control-Allow-Credentials": "true"});
+                }
+            });
+        }
+    });
+
+    //删除keyNum
+    fs.readFile(fileUrl[2], function (err, data3) {
+        if(err){response.writeHead(404, {'Content-Type': 'text/Json', "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Credentials": "true"});}
+        else{
+            let deteles2 = [];
+            data3 = JSON.parse(data3);
+
+            for(let q in data3.data) {
+                if (data3.data[q].factory === origin.factory && data3.data[q].id === origin.id && data3.data[q].name === origin.name) {
+                    deteles2.push(Number(q));
+                }
+            }
+            deleteArray(data3.data, deteles2);
+
+            data3 = JSON.stringify(data3);
+            fs.writeFile(fileUrl[2], data3, function (err) {
+                if(err){response.writeHead(404, {'Content-Type': 'text/json', "Access-Control-Allow-Origin": "*",
+                            "Access-Control-Allow-Credentials": "true"});}
+                else{
+                    response.writeHead(200, {'Content-Type': 'text/json', "Access-Control-Allow-Origin": "*",
+                            "Access-Control-Allow-Credentials": "true"});
+                }
+            });
+        }
+    });
+
+    //  发送响应数据
+    response.end();
+};
+
 //期初折账
 exports.first = function (request, response, fileUrl) {
     fs.readFile(fileUrl, function (err, data) {
@@ -227,3 +321,29 @@ exports.first = function (request, response, fileUrl) {
         response.end();
     });
 };
+
+function deleteArray(arrays, index) {
+    if(typeof index === "number"){
+        if(index === 0){
+            arrays.shift();
+        }else if(arrays.length === index + 1){
+            arrays.pop();
+        }else{
+            for(let i = index; i < arrays.length - 1; i++){
+                arrays[i] = arrays[i + 1]
+            }
+            arrays.pop();
+        }
+    }else{
+        for(let i in index.reverse()){
+            if(index[i] === arrays.length - 1){
+                arrays.pop();
+            }else if(index[i] === 0){
+                arrays.shift();
+            }else{
+                arrays[index[i]] = arrays[index[i] + 1];
+                arrays.pop();
+            }
+        }
+    }
+}
