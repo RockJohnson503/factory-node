@@ -428,7 +428,7 @@ function changePages(pageNum){
     }else{
         filtrateTable=backupAataArray.slice(0);
     }
-    getDatas("changeTableNum?tableNum=" + tableNum);
+    if(getDatas("changeTableNum?tableNum=" + tableNum) === null){alert("获取数据失败!code(11)"); return}
     tableCreate();
     createPages();
 }
@@ -465,4 +465,42 @@ function addDatas(){
         "<button class='checkBtn ml' onclick='cancle(this)'>取消</button></td>"+
     "</tr>");
     $("#userImportTable>tbody").append(trHtml);
+}
+
+//删除产品的操作
+function deleteDatas(node) {
+    let tds = node.parent().parent().children();
+    let thisFactory = tds.eq(0).text();
+    let thisId = tds.eq(1).text();
+    let thisName = tds.eq(2).text();
+
+    sure = confirm("确认要删除\n厂家: {0}, 型号: {1}, 名称: {2}\n此产品吗!".replace("{0}", thisFactory).replace("{1}", thisId).replace("{2}", thisName));
+    if(!sure){return}
+
+    let origin = {"factory": thisFactory, "id": thisId, "name": thisName};
+    if(getDatas("deleteData?origin=" + JSON.stringify(origin)) === null){alert("删除产品失败!"); return}
+    location.reload();
+}
+
+//改变操作按钮
+function operatToggle() {
+    let trs = $("#userImportTable tbody tr");
+
+    if(checkOperat(trs)){return ;}
+    for(let i = 0; i < trs.length; i++){
+        let optd = trs.eq(i).children().eq(-1);//操作栏的td
+
+        if(optd.children().length === 2){
+            optd.empty();
+            optd.append($("<button class='checkBtn delBtn' onclick='deleteDatas($(this))'>删除</button>"));
+        }else{
+            optd.empty();
+            let txtHmlt = $("<button class='checkBtn showModal'>入库</button>" +
+                "<button" + (filtrateTable[i].now <= 0 ? " disabled='disabled'" : "") + " class='checkBtn showModal ml'>领料</button>");
+            optd.append(txtHmlt);
+
+            //加载弹窗
+            loadModal();
+        }
+    }
 }
