@@ -231,6 +231,9 @@ button:hover{
 #userImportTable tbody td:nth-child(2) span{
     cursor: pointer;
 }
+button.delBtn{
+    background: red;
+}
 
 /*一些小属性*/
 .ml{
